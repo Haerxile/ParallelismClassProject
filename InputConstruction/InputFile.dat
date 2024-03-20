@@ -1,0 +1,10 @@
+# this is a notation
+Calculation diago # diagonalization of a matrix
+matrix_type random # initialization of a matrix
+matrix_print 1 # print the matrix
+nrows 6 # number of rows
+unmatched item # unmatched argument
+ncols 6 # number of cols
+
+# blank line
+calculation diago diagoo # too many argument in a line
