@@ -20,6 +20,8 @@ public:
 
   Configs targetConfigs_;
 
+  void printConfigs();
+
 private:
   std::string filename_;
   Configs readInConfigs_;

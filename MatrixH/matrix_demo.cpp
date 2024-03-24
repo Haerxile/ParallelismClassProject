@@ -17,7 +17,7 @@ Matrix_demo::Matrix_demo(const int &nrow, const int &ncol,
   nrow_ = nrow;
   ncol_ = ncol;
   data_.resize(nrow_, std::vector<double>(ncol_));
-  for (auto sub : data_) {
+  for (auto &sub : data_) {
     fill(sub.begin(), sub.end(), initNum);
   }
 }
@@ -36,8 +36,9 @@ void Matrix_demo::init(const int &nrow, const int &ncol,
                        const double &initNum) {
   nrow_ = nrow;
   ncol_ = ncol;
+  data_.clear();
   data_.resize(nrow_, std::vector<double>(ncol_));
-  for (auto sub : data_) {
+  for (auto &sub : data_) {
     fill(sub.begin(), sub.end(), initNum);
   }
 }
@@ -45,8 +46,9 @@ void Matrix_demo::init(const int &nrow, const int &ncol,
 void Matrix_demo::init(const int &n) {
   nrow_ = n;
   ncol_ = n;
+  data_.clear();
   data_.resize(nrow_, std::vector<double>(ncol_));
-  for (auto sub : data_) {
+  for (auto &sub : data_) {
     fill(sub.begin(), sub.end(), 0);
   }
   for (int i = 0; i < n; ++i) {
@@ -61,6 +63,7 @@ bool Matrix_demo::readFromFile(const string &filename) {
     return false;
   }
   fileIn >> nrow_ >> ncol_;
+  data_.clear();
   data_.resize(nrow_, std::vector<double>(ncol_));
   for (int i = 0; i < nrow_; ++i) {
     for (int j = 0; j < ncol_; ++j) {
@@ -94,9 +97,10 @@ Matrix_demo &Matrix_demo::operator=(const Matrix_demo &matrix) {
   if (&matrix != this) {
     this->nrow_ = matrix.nrow_;
     this->ncol_ = matrix.ncol_;
-    this->data_.resize(nrow_, vector<double>(ncol_));
-    for (int i = 0; i < nrow_; ++i) {
-      for (int j = 0; j < ncol_; ++j) {
+    this->data_.clear();
+    this->data_.resize(this->nrow_, vector<double>(this->ncol_));
+    for (int i = 0; i < this->nrow_; ++i) {
+      for (int j = 0; j < this->ncol_; ++j) {
         this->data_[i][j] = matrix.data_[i][j];
       }
     }

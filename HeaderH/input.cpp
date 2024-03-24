@@ -45,6 +45,12 @@ void Input::set_maxlen(int target_len) {
   MAXLEN_ = target_len > MAXLEN_ ? target_len : MAXLEN_;
 }
 
+void Input::printConfigs() {
+  for (auto sub : targetConfigs_) {
+    cout << sub.first << ": " << sub.second << endl;
+  }
+}
+
 bool Input::readConfigsFromFile() {
   ifstream fin;
   fin.open(filename_);
