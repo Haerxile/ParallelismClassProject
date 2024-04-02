@@ -6,6 +6,7 @@ SUBDIR := $(ROOT)
 SUBDIR += $(ROOT)/InputH
 SUBDIR += $(ROOT)/MatrixH
 SUBDIR += $(ROOT)/testfile
+SUBDIR += $(ROOT)/TimerH
 
 # target
 TARGET := main
