@@ -19,10 +19,10 @@ public:
   double minElem();
 
   Matrix_demo &operator=(const Matrix_demo &matrix);
-  Matrix_demo &operator*(const Matrix_demo &matrix);
-  Matrix_demo &operator*(const double &figure);
-  Matrix_demo &operator+(const Matrix_demo &matrix);
-  Matrix_demo &operator-(const Matrix_demo &matrix);
+  Matrix_demo operator*(const Matrix_demo &matrix) const;
+  Matrix_demo operator*(const double &figure) const;
+  Matrix_demo operator+(const Matrix_demo &matrix) const;
+  Matrix_demo operator-(const Matrix_demo &matrix) const;
 
   void print();
 

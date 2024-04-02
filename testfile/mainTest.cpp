@@ -9,7 +9,7 @@ int main() {
   Matrix_demo B(5, 6, 1.0);
   Matrix_demo B1(5, 5, 2.0);
   Matrix_demo C = A + A;
-  Matrix_demo D = (C + B1) * B;
+  Matrix_demo D = (C + B1) * A;
   Matrix_demo E = A * 5;
   double maxD = D.maxElem();
   double minD = D.minElem();
@@ -27,7 +27,7 @@ int main() {
   E.print();
   cout << "maxD: " << maxD << endl << "minD: " << minD << endl;
 
-  Input Inn("./InputFile.dat");
+  Input Inn("./testfile/InputFile.dat");
   cout << "Configs: " << endl;
   Inn.printConfigs();
 }

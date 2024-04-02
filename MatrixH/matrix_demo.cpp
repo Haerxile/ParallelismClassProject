@@ -108,57 +108,65 @@ Matrix_demo &Matrix_demo::operator=(const Matrix_demo &matrix) {
   return *this;
 }
 
-Matrix_demo &Matrix_demo::operator*(const Matrix_demo &matrix) {
+Matrix_demo Matrix_demo::operator*(const Matrix_demo &matrix) const {
+  int matrixK;
   if (this->ncol_ != matrix.nrow_) {
     cerr << "ncol and nrow not matched when multipling!" << endl;
     return *this;
+  } else {
+    matrixK = this->ncol_;
   }
   Matrix_demo tempMatrix(this->nrow_, matrix.ncol_, 0);
-  for (int i = 0; i < this->nrow_; ++i) {
-    for (int k = 0; k < this->ncol_; ++k) {
+  for (int i = 0; i < tempMatrix.nrow_; ++i) {
+    for (int k = 0; k < matrixK; ++k) {
       double s = this->data_[i][k];
-      for (int j = 0; j < matrix.ncol_; ++j) {
+      for (int j = 0; j < tempMatrix.ncol_; ++j) {
         tempMatrix.data_[i][j] += s * matrix.data_[k][j];
       }
     }
   }
-  *this = tempMatrix;
-  return *this;
+  return tempMatrix;
 }
 
-Matrix_demo &Matrix_demo::operator*(const double &figure) {
-  for (int i = 0; i < this->nrow_; ++i) {
-    for (int j = 0; j < this->ncol_; ++j) {
-      this->data_[i][j] *= figure;
+Matrix_demo Matrix_demo::operator*(const double &figure) const {
+  Matrix_demo temp;
+  temp.init(this->nrow_, this->ncol_, 0);
+  for (int i = 0; i < temp.nrow_; ++i) {
+    for (int j = 0; j < temp.ncol_; ++j) {
+      temp.data_[i][j] = figure * this->data_[i][j];
     }
   }
-  return *this;
+  return temp;
 }
 
-Matrix_demo &Matrix_demo::operator+(const Matrix_demo &matrix) {
+Matrix_demo Matrix_demo::operator+(const Matrix_demo &matrix) const {
   if (this->nrow_ != matrix.nrow_ || this->ncol_ != matrix.ncol_) {
     cerr << "nrow and ncol unmatched when adding!" << endl;
     return *this;
   }
-  for (int i = 0; i < this->nrow_; ++i) {
-    for (int j = 0; j < this->ncol_; ++j) {
-      this->data_[i][j] += matrix.data_[i][j];
+  Matrix_demo temp;
+  temp.init(this->nrow_, this->ncol_, 0);
+  for (int i = 0; i < temp.nrow_; ++i) {
+    for (int j = 0; j < temp.ncol_; ++j) {
+      temp.data_[i][j] = this->data_[i][j] + matrix.data_[i][j];
     }
   }
-  return *this;
+  return temp;
 }
 
-Matrix_demo &Matrix_demo::operator-(const Matrix_demo &matrix) {
+Matrix_demo Matrix_demo::operator-(const Matrix_demo &matrix) const {
   if (this->nrow_ != matrix.nrow_ || this->ncol_ != matrix.ncol_) {
-    cerr << "nrow and ncol unmatched when adding!" << endl;
+    cerr << "nrow and ncol unmatched when minusing!" << endl;
     return *this;
   }
-  for (int i = 0; i < this->nrow_; ++i) {
-    for (int j = 0; j < this->ncol_; ++j) {
-      this->data_[i][j] -= matrix.data_[i][j];
+  Matrix_demo temp;
+  temp.init(this->nrow_, this->ncol_, 0);
+  for (int i = 0; i < temp.nrow_; ++i) {
+    for (int j = 0; j < temp.ncol_; ++j) {
+      temp.data_[i][j] = this->data_[i][j] - matrix.data_[i][j];
     }
   }
-  return *this;
+  return temp;
 }
 
 void Matrix_demo::print() {
