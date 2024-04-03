@@ -17,6 +17,7 @@ public:
   void genRandomMatrix(const int &m, const int &n, const double &downLim,
                        const double &upLim);
   bool readFromFile(const std::string &filename);
+  bool writeToFile(const std::string &filename);
   double maxElem();
   double minElem();
 

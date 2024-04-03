@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iomanip>
+#include <ios>
 #include <random>
 
 using namespace std;
@@ -87,6 +88,22 @@ bool Matrix_demo::readFromFile(const string &filename) {
     for (int j = 0; j < ncol_; ++j) {
       fileIn >> data_[i][j];
     }
+  }
+  return true;
+}
+
+bool Matrix_demo::writeToFile(const string &filename) {
+  ofstream fileOut(filename, ios_base::app);
+  if (!fileOut.is_open()) {
+    cerr << "Failed to open <" << filename << ">!" << endl;
+    return false;
+  }
+  fileOut << endl << nrow_ << " " << ncol_ << endl;
+  for (int i = 0; i < nrow_; ++i) {
+    for (int j = 0; j < ncol_; ++j) {
+      fileOut << data_[i][j] << " ";
+    }
+    fileOut << endl;
   }
   return true;
 }
