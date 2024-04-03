@@ -7,6 +7,7 @@ SUBDIR += $(ROOT)/InputH
 SUBDIR += $(ROOT)/MatrixH
 SUBDIR += $(ROOT)/testfile
 SUBDIR += $(ROOT)/TimerH
+SUBDIR += $(ROOT)/TabulateH
 
 # target
 TARGET := main

@@ -1,10 +1,11 @@
-#include "./timer.h"
-#include "tabulate.h"
+#include "timer.h"
 
 #include <chrono>
 #include <iostream>
 #include <stdexcept>
 #include <utility>
+
+#include "tabulate.hpp"
 
 using namespace std;
 using namespace tabulate;
@@ -28,15 +29,19 @@ void Timer_demo::tick(const std::string &className,
   Timer_demo *timerPtr = nullptr;
   bool is_it_exist = false;
   try {
-    map<string, Timer_demo> &tempMap = goToData.at(className);
+    map<string, Timer_demo *> &tempMap = goToData.at(className);
     try {
-      timerPtr = &tempMap.at(funcName);
+      timerPtr = tempMap.at(funcName);
       is_it_exist = true;
     } catch (const out_of_range &e) {
-      timerPtr = &tempMap[funcName];
+      timerPtr = new Timer_demo;
+      tempMap.insert(make_pair(funcName, timerPtr));
     }
   } catch (const out_of_range &e) {
-    timerPtr = &goToData[className][funcName];
+    timerPtr = new Timer_demo;
+    map<string, Timer_demo *> tempMap;
+    tempMap.insert(make_pair(funcName, timerPtr));
+    Timer_demo::goToData.insert(make_pair(className, tempMap));
   }
   if (is_it_exist) {
     if (timerPtr->stat) {
@@ -68,7 +73,7 @@ void Timer_demo::printRes() {
     double classTotalTime = 0;
     double classPerc = 0;
     for (auto &funcPair : classPair.second) {
-      Timer_demo *tempPtr = &funcPair.second;
+      Timer_demo *tempPtr = funcPair.second;
       tempPtr->avrgTime = tempPtr->addedTime / tempPtr->cnt;
       tempPtr->perc = 100 * tempPtr->addedTime / Timer_demo::TIME_ALL;
       output.add_row(RowStream{} << classPair.first << funcPair.first
@@ -86,4 +91,15 @@ void Timer_demo::printRes() {
                              << " "
                              << "100");
   cout << output << endl;
+}
+
+void Timer_demo::clearRes() {
+  for (auto &classPair : Timer_demo::goToData) {
+    for (auto &funcPair : classPair.second) {
+      delete funcPair.second;
+      classPair.second.erase(funcPair.first);
+    }
+    Timer_demo::goToData.erase(classPair.first);
+  }
+  cout << "Cleared!" << endl;
 }

@@ -14,6 +14,7 @@ public:
   void reset();
 
   static void printRes();
+  static void clearRes();
   static void tick(const std::string &className, const std::string &funcName);
 
 private:
@@ -26,7 +27,7 @@ private:
   double addedTime;
   double avrgTime;
   double perc;
-  static std::map<std::string, std::map<std::string, Timer_demo>> goToData;
+  static std::map<std::string, std::map<std::string, Timer_demo *>> goToData;
 };
 
 #endif

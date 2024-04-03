@@ -5,6 +5,8 @@
 using namespace std;
 
 int main() {
+  Timer_demo init;
+  init.printRes();
   Timer_demo::tick("Matrix_demo", "test1");
   Matrix_demo A;
   A.init(5);
