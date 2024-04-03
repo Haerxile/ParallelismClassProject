@@ -14,6 +14,8 @@ public:
   int colNum() const;
   void init(const int &nrow, const int &ncol, const double &initNum = 0);
   void init(const int &n);
+  void genRandomMatrix(const int &m, const int &n, const double &downLim,
+                       const double &upLim);
   bool readFromFile(const std::string &filename);
   double maxElem();
   double minElem();

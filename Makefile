@@ -5,9 +5,9 @@ ROOT := $(shell pwd)
 SUBDIR := $(ROOT)
 SUBDIR += $(ROOT)/InputH
 SUBDIR += $(ROOT)/MatrixH
-SUBDIR += $(ROOT)/testfile
 SUBDIR += $(ROOT)/TimerH
 SUBDIR += $(ROOT)/TabulateH
+SUBDIR += $(ROOT)/testfile
 
 # target
 TARGET := main

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iomanip>
+#include <random>
 
 using namespace std;
 
@@ -53,6 +54,23 @@ void Matrix_demo::init(const int &n) {
   }
   for (int i = 0; i < n; ++i) {
     data_[i][i] = 1;
+  }
+}
+
+void Matrix_demo::genRandomMatrix(const int &m, const int &n,
+                                  const double &downLim, const double &upLim) {
+  nrow_ = m;
+  ncol_ = n;
+  data_.clear();
+  data_.resize(m, vector<double>(n));
+
+  random_device seed;
+  mt19937_64 branch(seed());
+  uniform_real_distribution<double> fruit(downLim, upLim);
+  for (int i = 0; i < nrow_; ++i) {
+    for (int j = 0; j < ncol_; ++j) {
+      data_[i][j] = fruit(branch);
+    }
   }
 }
 

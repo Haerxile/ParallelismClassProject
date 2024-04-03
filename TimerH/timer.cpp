@@ -2,13 +2,17 @@
 
 #include <chrono>
 #include <iostream>
+#include <map>
 #include <stdexcept>
 #include <utility>
 
-#include "tabulate.hpp"
+#include "../TabulateH/tabulate.hpp"
 
 using namespace std;
 using namespace tabulate;
+
+double Timer_demo::TIME_ALL;
+map<string, map<string, Timer_demo *>> Timer_demo::goToData;
 
 Timer_demo::Timer_demo() {
   stat = false;
