@@ -1,6 +1,9 @@
 #include "matrix_demo.h"
 
 #include <algorithm>
+#include <cblas-openblas.h>
+#include <cstdlib>
+#include <exception>
 #include <fstream>
 #include <iomanip>
 #include <ios>
@@ -75,12 +78,20 @@ void Matrix_demo::genRandomMatrix(const int &m, const int &n,
   }
 }
 
-bool Matrix_demo::readFromFile(const string &filename) {
+ios::pos_type Matrix_demo::readFromFile(const string &filename,
+                                        const ios::pos_type &targetPos) {
   ifstream fileIn(filename);
   if (!fileIn.is_open()) {
     cerr << "Failed to open <" << filename << ">!" << endl;
     return false;
   }
+
+  fileIn.seekg(targetPos, ios::beg);
+  if (!fileIn.good()) {
+    cerr << "failed to seek targetPos in fstream <" << filename << ">!" << endl;
+    exit(EXIT_FAILURE);
+  }
+
   fileIn >> nrow_ >> ncol_;
   data_.clear();
   data_.resize(nrow_, std::vector<double>(ncol_));
@@ -89,7 +100,7 @@ bool Matrix_demo::readFromFile(const string &filename) {
       fileIn >> data_[i][j];
     }
   }
-  return true;
+  return fileIn.tellg();
 }
 
 bool Matrix_demo::writeToFile(const string &filename) {
@@ -126,6 +137,62 @@ double Matrix_demo::minElem() {
     }
   }
   return minElement;
+}
+
+/*
+typedef enum CBLAS_ORDER     {CblasRowMajor=101, CblasColMajor=102} CBLAS_ORDER;
+typedef enum CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112,
+CblasConjTrans=113, CblasConjNoTrans=114} CBLAS_TRANSPOSE; typedef enum
+CBLAS_UPLO      {CblasUpper=121, CblasLower=122} CBLAS_UPLO; typedef enum
+CBLAS_DIAG      {CblasNonUnit=131, CblasUnit=132} CBLAS_DIAG; typedef enum
+CBLAS_SIDE      {CblasLeft=141, CblasRight=142} CBLAS_SIDE; typedef CBLAS_ORDER
+CBLAS_LAYOUT;
+*/
+
+double *Matrix_demo::matrixToArray(CBLAS_LAYOUT layout) const {
+  double *ptr = new double(nrow_ * ncol_);
+  cout << "New at <" << ptr << ">." << endl;
+  double *tempPtr = ptr;
+  if (layout == CblasRowMajor) {
+    for (int i = 0; i < nrow_; ++i) {
+      for (int j = 0; j < ncol_; ++j) {
+        *tempPtr = data_[i][j];
+        cout << "Write " << *tempPtr << " at " << tempPtr << endl;
+        tempPtr++;
+      }
+    }
+  } else if (layout == CblasColMajor) {
+    for (int i = 0; i < ncol_; ++i) {
+      for (int j = 0; j < nrow_; ++j) {
+        *tempPtr = data_[j][i];
+        cout << "Write " << *tempPtr << " at " << tempPtr << endl;
+        tempPtr++;
+      }
+    }
+  }
+  return ptr;
+}
+
+void Matrix_demo::ArrayToMatrix(double *ptr, int m, int n,
+                                CBLAS_LAYOUT layout) {
+  this->init(m, n, 0.0);
+  if (layout == CblasRowMajor) {
+    for (int i = 0; i < nrow_; ++i) {
+      for (int j = 0; j < ncol_; ++j) {
+        cout << "read " << *ptr << " from " << ptr << endl;
+        data_[i][j] = *ptr;
+        ptr++;
+      }
+    }
+  } else if (layout == CblasColMajor) {
+    for (int i = 0; i < ncol_; ++i) {
+      for (int j = 0; j < nrow_; ++j) {
+        cout << "read " << *ptr << " from " << ptr << endl;
+        data_[j][i] = *ptr;
+        ptr++;
+      }
+    }
+  }
 }
 
 Matrix_demo &Matrix_demo::operator=(const Matrix_demo &matrix) {
@@ -202,6 +269,29 @@ Matrix_demo Matrix_demo::operator-(const Matrix_demo &matrix) const {
     }
   }
   return temp;
+}
+
+void Matrix_demo::CBLAS_Mult(const Matrix_demo &A, const Matrix_demo &B,
+                             Matrix_demo &C, CBLAS_LAYOUT layout) {
+  int m = A.nrow_;
+  int k = 0;
+  int k_A = A.ncol_;
+  int k_B = B.nrow_;
+  int n = B.ncol_;
+  if (k_A != k_B) {
+    cerr << "Unmached A_ncol and B_nrow when multifying!" << endl;
+    exit(EXIT_FAILURE);
+  } else {
+    k = k_A;
+  }
+  double *auxPtrA = nullptr;
+  double *auxPtrB = nullptr;
+  double *auxPtrC = nullptr;
+  auxPtrA = A.matrixToArray(layout);
+  auxPtrB = B.matrixToArray(layout);
+  cblas_dgemm(layout, CblasNoTrans, CblasNoTrans, m, n, k, 1.0, auxPtrA, k_A,
+              auxPtrB, n, 0.0, auxPtrC, n);
+  C.ArrayToMatrix(auxPtrC, m, n, layout);
 }
 
 void Matrix_demo::print() {

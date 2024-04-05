@@ -7,7 +7,8 @@ SUBDIR += $(ROOT)/InputH
 SUBDIR += $(ROOT)/MatrixH
 SUBDIR += $(ROOT)/TimerH
 SUBDIR += $(ROOT)/TabulateH
-SUBDIR += $(ROOT)/testfile
+SUBDIR += $(ROOT)/MeVsBLAS
+SUBDIR += /opt/OpenBLAS/lib
 
 # target
 TARGET := main
@@ -16,6 +17,7 @@ OUTPUT := $(ROOT)/output
 
 # file paths and depends
 INCS := $(foreach DIR,$(SUBDIR),-I$(DIR))
+SICS := $(foreach DIR,$(SUBDIR),$(wildcard $(DIR)/libopenblas.a))
 SRCS := $(foreach DIR,$(SUBDIR),$(wildcard $(DIR)/*.cpp))
 OBJS := $(patsubst $(ROOT)/%.cpp,$(OUTPUT)/%.o,$(SRCS))
 DEPS := $(patsubst %.o,%.d,$(OBJS))
@@ -23,14 +25,14 @@ DEPS := $(patsubst %.o,%.d,$(OBJS))
 # linking
 $(TARGET) : $(OBJS)
 	@echo Linking...
-	@$(CXX) $(OBJS) -o $@
+	$(CXX) $(OBJS) -o $@ $(SICS) -lgfortran
 	@echo Done!
 
 # compiling
 $(OUTPUT)/%.o : %.cpp
 	@echo Compiling $<...
 	@mkdir -p $(dir $@)
-	@$(CXX) -MMD -MP -c $(INCS) $< -o $@
+	$(CXX) -MMD -MP -c $(INCS) $< -o $@
 	@echo Done!
 
 # clean

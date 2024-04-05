@@ -1,6 +1,8 @@
 #ifndef MATRIX_DEMO_H
 #define MATRIX_DEMO_H
 
+#include <cblas-openblas.h>
+#include <fstream>
 #include <iostream>
 #include <vector>
 
@@ -16,10 +18,13 @@ public:
   void init(const int &n);
   void genRandomMatrix(const int &m, const int &n, const double &downLim,
                        const double &upLim);
-  bool readFromFile(const std::string &filename);
+  std::ios::pos_type readFromFile(const std::string &filename,
+                                  const std::ios::pos_type &targetPos);
   bool writeToFile(const std::string &filename);
   double maxElem();
   double minElem();
+  double *matrixToArray(CBLAS_LAYOUT layout) const;
+  void ArrayToMatrix(double *ptr, int m, int n, CBLAS_LAYOUT layout);
 
   Matrix_demo &operator=(const Matrix_demo &matrix);
   Matrix_demo operator*(const Matrix_demo &matrix) const;
@@ -27,6 +32,8 @@ public:
   Matrix_demo operator+(const Matrix_demo &matrix) const;
   Matrix_demo operator-(const Matrix_demo &matrix) const;
 
+  static void CBLAS_Mult(const Matrix_demo &A, const Matrix_demo &B,
+                         Matrix_demo &C, CBLAS_LAYOUT layout = CblasRowMajor);
   void print();
 
 private:
