@@ -1,0 +1,30 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I.",
+      "-I./func",
+      "-o",
+      "output/./entry.o",
+      "entry.cpp"
+    ],
+    "directory": "/home/haerxile/ColdField/ParallelismClassProject/CppLearnTest/MakefileTest",
+    "file": "/home/haerxile/ColdField/ParallelismClassProject/CppLearnTest/MakefileTest/entry.cpp",
+    "output": "/home/haerxile/ColdField/ParallelismClassProject/CppLearnTest/MakefileTest/output/entry.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I.",
+      "-I./func",
+      "-o",
+      "output/./func/bar.o",
+      "func/bar.cpp"
+    ],
+    "directory": "/home/haerxile/ColdField/ParallelismClassProject/CppLearnTest/MakefileTest",
+    "file": "/home/haerxile/ColdField/ParallelismClassProject/CppLearnTest/MakefileTest/func/bar.cpp",
+    "output": "/home/haerxile/ColdField/ParallelismClassProject/CppLearnTest/MakefileTest/output/func/bar.o"
+  }
+]

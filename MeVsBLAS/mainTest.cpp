@@ -26,23 +26,6 @@ int main(int argc, char *argv[]) {
   B.readFromFile(inputFilename, lastPos);
   Timer_demo::tick("Matrix_demo", "readFromFile");
 
-  A.print();
-  double *ptrA = nullptr;
-  ptrA = A.matrixToArray(CblasRowMajor);
-  cout << "A:" << endl;
-  A.print();
-  cout << "ptrA: " << ptrA << endl;
-  cout << "*ptrA" << *ptrA << endl;
-  A.ArrayToMatrix(ptrA, A.rowNum(), A.colNum(), CblasRowMajor);
-  A.print();
-  cout << "A_array:" << endl;
-  cout << ptrA << endl;
-  double *temppppp = ptrA;
-  for (int i = 0; i < 1; ++i) {
-    cout << *temppppp << " ";
-    temppppp++;
-  }
-
   Matrix_demo C;
   Timer_demo::tick("Matrix_demo", "operator*");
   C = A * B;

@@ -1,4 +1,5 @@
 # makefile
+
 ROOT := $(shell pwd)
 
 # ownset path
@@ -16,6 +17,7 @@ CXX := g++
 OUTPUT := $(ROOT)/output
 
 # file paths and depends
+
 INCS := $(foreach DIR,$(SUBDIR),-I$(DIR))
 SICS := $(foreach DIR,$(SUBDIR),$(wildcard $(DIR)/libopenblas.a))
 SRCS := $(foreach DIR,$(SUBDIR),$(wildcard $(DIR)/*.cpp))
@@ -23,12 +25,14 @@ OBJS := $(patsubst $(ROOT)/%.cpp,$(OUTPUT)/%.o,$(SRCS))
 DEPS := $(patsubst %.o,%.d,$(OBJS))
 
 # linking
+
 $(TARGET) : $(OBJS)
 	@echo Linking...
 	$(CXX) $(OBJS) -o $@ $(SICS) -lgfortran
 	@echo Done!
 
 # compiling
+
 $(OUTPUT)/%.o : %.cpp
 	@echo Compiling $<...
 	@mkdir -p $(dir $@)

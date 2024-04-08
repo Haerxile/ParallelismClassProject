@@ -119,7 +119,7 @@ bool Matrix_demo::writeToFile(const string &filename) {
   return true;
 }
 
-double Matrix_demo::maxElem() {
+double Matrix_demo::maxElem() const{
   double maxElement = data_[0][0];
   for (int i = 0; i < nrow_; i++) {
     for (int j = 0; j < ncol_; ++j) {
@@ -129,7 +129,7 @@ double Matrix_demo::maxElem() {
   return maxElement;
 }
 
-double Matrix_demo::minElem() {
+double Matrix_demo::minElem() const{
   double minElement = data_[0][0];
   for (int i = 0; i < nrow_; i++) {
     for (int j = 0; j < ncol_; ++j) {
@@ -149,15 +149,14 @@ CBLAS_SIDE      {CblasLeft=141, CblasRight=142} CBLAS_SIDE; typedef CBLAS_ORDER
 CBLAS_LAYOUT;
 */
 
-double *Matrix_demo::matrixToArray(CBLAS_LAYOUT layout) const {
-  double *ptr = new double(nrow_ * ncol_);
-  cout << "New at <" << ptr << ">." << endl;
-  double *tempPtr = ptr;
+double* Matrix_demo::matrixToArray(CBLAS_LAYOUT layout, double* arrayPtr) const {
+  int tempIndex = (nrow_ * ncol_);
+  arrayPtr = new double[tempIndex];
+  double *tempPtr = arrayPtr;
   if (layout == CblasRowMajor) {
     for (int i = 0; i < nrow_; ++i) {
       for (int j = 0; j < ncol_; ++j) {
-        *tempPtr = data_[i][j];
-        cout << "Write " << *tempPtr << " at " << tempPtr << endl;
+        (*tempPtr) = this->data_[i][j];
         tempPtr++;
       }
     }
@@ -165,31 +164,33 @@ double *Matrix_demo::matrixToArray(CBLAS_LAYOUT layout) const {
     for (int i = 0; i < ncol_; ++i) {
       for (int j = 0; j < nrow_; ++j) {
         *tempPtr = data_[j][i];
-        cout << "Write " << *tempPtr << " at " << tempPtr << endl;
         tempPtr++;
       }
     }
   }
-  return ptr;
+  return arrayPtr;
 }
 
 void Matrix_demo::ArrayToMatrix(double *ptr, int m, int n,
                                 CBLAS_LAYOUT layout) {
   this->init(m, n, 0.0);
+  if (ptr == nullptr | ptr == 0) {
+    cout << "Nullptr given to function <ArrayToMatrix>!" << endl;
+    exit(EXIT_FAILURE);
+  }
+  double* tempPtr = ptr;
   if (layout == CblasRowMajor) {
     for (int i = 0; i < nrow_; ++i) {
       for (int j = 0; j < ncol_; ++j) {
-        cout << "read " << *ptr << " from " << ptr << endl;
-        data_[i][j] = *ptr;
-        ptr++;
+        data_[i][j] = *tempPtr;
+        tempPtr++;
       }
     }
   } else if (layout == CblasColMajor) {
     for (int i = 0; i < ncol_; ++i) {
       for (int j = 0; j < nrow_; ++j) {
-        cout << "read " << *ptr << " from " << ptr << endl;
-        data_[j][i] = *ptr;
-        ptr++;
+        data_[j][i] = *tempPtr;
+        tempPtr++;
       }
     }
   }
@@ -287,17 +288,20 @@ void Matrix_demo::CBLAS_Mult(const Matrix_demo &A, const Matrix_demo &B,
   double *auxPtrA = nullptr;
   double *auxPtrB = nullptr;
   double *auxPtrC = nullptr;
-  auxPtrA = A.matrixToArray(layout);
-  auxPtrB = B.matrixToArray(layout);
+  auxPtrA = A.matrixToArray(layout, auxPtrA);
+  auxPtrB = B.matrixToArray(layout, auxPtrB);
+  int auxIndex = m * n;
+  auxPtrC = new double[auxIndex];
   cblas_dgemm(layout, CblasNoTrans, CblasNoTrans, m, n, k, 1.0, auxPtrA, k_A,
               auxPtrB, n, 0.0, auxPtrC, n);
   C.ArrayToMatrix(auxPtrC, m, n, layout);
 }
 
-void Matrix_demo::print() {
+void Matrix_demo::print() const{
   for (int i = 0; i < nrow_; ++i) {
     for (int j = 0; j < ncol_; ++j) {
-      cout << setw(12) << data_[i][j];
+      cout.clear();
+      cout << setw(20) << data_[i][j];
     }
     cout << endl;
   }

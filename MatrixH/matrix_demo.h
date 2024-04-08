@@ -21,9 +21,9 @@ public:
   std::ios::pos_type readFromFile(const std::string &filename,
                                   const std::ios::pos_type &targetPos);
   bool writeToFile(const std::string &filename);
-  double maxElem();
-  double minElem();
-  double *matrixToArray(CBLAS_LAYOUT layout) const;
+  double maxElem() const;
+  double minElem() const;
+  double* matrixToArray(CBLAS_LAYOUT layout, double* arrayPtr) const;
   void ArrayToMatrix(double *ptr, int m, int n, CBLAS_LAYOUT layout);
 
   Matrix_demo &operator=(const Matrix_demo &matrix);
@@ -34,7 +34,7 @@ public:
 
   static void CBLAS_Mult(const Matrix_demo &A, const Matrix_demo &B,
                          Matrix_demo &C, CBLAS_LAYOUT layout = CblasRowMajor);
-  void print();
+  void print() const;
 
 private:
   int nrow_;
