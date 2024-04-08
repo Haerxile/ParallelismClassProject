@@ -1,6 +1,7 @@
 #include "matrix_demo.h"
 
 #include <algorithm>
+#include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <ios>
@@ -59,7 +60,8 @@ void Matrix_demo::init(const int &n) {
 }
 
 void Matrix_demo::genRandomMatrix(const int &m, const int &n,
-                                  const double &downLim, const double &upLim) {
+                                  const double &downLim, const double &upLim,
+                                  const string &matrixType) {
   nrow_ = m;
   ncol_ = n;
   data_.clear();
@@ -68,10 +70,50 @@ void Matrix_demo::genRandomMatrix(const int &m, const int &n,
   random_device seed;
   mt19937_64 branch(seed());
   uniform_real_distribution<double> fruit(downLim, upLim);
-  for (int i = 0; i < nrow_; ++i) {
-    for (int j = 0; j < ncol_; ++j) {
-      data_[i][j] = fruit(branch);
+
+  switch (matrixType[0]) {
+  case 'N':
+    for (int i = 0; i < nrow_; ++i) {
+      for (int j = 0; j < ncol_; ++j) {
+        data_[i][j] = fruit(branch);
+      }
     }
+    break;
+  case 'S':
+    if (nrow_ != ncol_) {
+      cerr << "row != col when requesting as symmetry!" << endl;
+      exit(EXIT_FAILURE);
+    }
+    for (int i = 0; i < nrow_; ++i) {
+      for (int j = 0; j <= i; ++j) {
+        data_[i][j] = fruit(branch);
+      }
+    }
+    for (int i = 0; i < nrow_; ++i) {
+      for (int j = i + 1; j < ncol_; ++j) {
+        data_[i][j] = data_[j][i];
+      }
+    }
+    break;
+  case 'A':
+    if (nrow_ != ncol_) {
+      cerr << "row != col when requesting as symmetry!" << endl;
+      exit(EXIT_FAILURE);
+    }
+    for (int i = 0; i < nrow_; ++i) {
+      for (int j = 0; j <= i; ++j) {
+        data_[i][j] = fruit(branch);
+      }
+    }
+    for (int i = 0; i < nrow_; ++i) {
+      for (int j = i + 1; j < ncol_; ++j) {
+        data_[i][j] = data_[j][i] * -1.0;
+      }
+    }
+    break;
+  default:
+    cerr << "invalid input of matrix type!" << endl;
+    exit(EXIT_FAILURE);
   }
 }
 

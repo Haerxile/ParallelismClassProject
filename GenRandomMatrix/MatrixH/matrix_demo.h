@@ -15,7 +15,7 @@ public:
   void init(const int &nrow, const int &ncol, const double &initNum = 0);
   void init(const int &n);
   void genRandomMatrix(const int &m, const int &n, const double &downLim,
-                       const double &upLim);
+                       const double &upLim, const std::string &matrixType);
   bool readFromFile(const std::string &filename);
   bool writeToFile(const std::string &filename);
   double maxElem();
