@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iomanip>
 #include <ios>
+#include <lapacke.h>
 #include <random>
 
 using namespace std;
@@ -119,7 +120,7 @@ bool Matrix_demo::writeToFile(const string &filename) {
   return true;
 }
 
-double Matrix_demo::maxElem() const{
+double Matrix_demo::maxElem() const {
   double maxElement = data_[0][0];
   for (int i = 0; i < nrow_; i++) {
     for (int j = 0; j < ncol_; ++j) {
@@ -129,7 +130,7 @@ double Matrix_demo::maxElem() const{
   return maxElement;
 }
 
-double Matrix_demo::minElem() const{
+double Matrix_demo::minElem() const {
   double minElement = data_[0][0];
   for (int i = 0; i < nrow_; i++) {
     for (int j = 0; j < ncol_; ++j) {
@@ -149,7 +150,8 @@ CBLAS_SIDE      {CblasLeft=141, CblasRight=142} CBLAS_SIDE; typedef CBLAS_ORDER
 CBLAS_LAYOUT;
 */
 
-double* Matrix_demo::matrixToArray(CBLAS_LAYOUT layout, double* arrayPtr) const {
+double *Matrix_demo::matrixToArray(CBLAS_LAYOUT layout,
+                                   double *arrayPtr) const {
   int tempIndex = (nrow_ * ncol_);
   arrayPtr = new double[tempIndex];
   double *tempPtr = arrayPtr;
@@ -174,11 +176,11 @@ double* Matrix_demo::matrixToArray(CBLAS_LAYOUT layout, double* arrayPtr) const 
 void Matrix_demo::ArrayToMatrix(double *ptr, int m, int n,
                                 CBLAS_LAYOUT layout) {
   this->init(m, n, 0.0);
-  if (ptr == nullptr | ptr == 0) {
+  if (ptr == nullptr || ptr == 0) {
     cout << "Nullptr given to function <ArrayToMatrix>!" << endl;
     exit(EXIT_FAILURE);
   }
-  double* tempPtr = ptr;
+  double *tempPtr = ptr;
   if (layout == CblasRowMajor) {
     for (int i = 0; i < nrow_; ++i) {
       for (int j = 0; j < ncol_; ++j) {
@@ -193,6 +195,20 @@ void Matrix_demo::ArrayToMatrix(double *ptr, int m, int n,
         tempPtr++;
       }
     }
+  }
+}
+
+void Matrix_demo::EigenToMatrix(double *ptr, int n) {
+  this->init(n, n, 0.0);
+  if (ptr == nullptr || ptr == 0) {
+    cout << "Nullptr given to function <EigenToMatrix>!" << endl;
+    exit(EXIT_FAILURE);
+  }
+  double *tempPtr = ptr;
+
+  for (int i = 0; i < nrow_; ++i) {
+    data_[i][i] = *tempPtr;
+    tempPtr++;
   }
 }
 
@@ -295,9 +311,39 @@ void Matrix_demo::CBLAS_Mult(const Matrix_demo &A, const Matrix_demo &B,
   cblas_dgemm(layout, CblasNoTrans, CblasNoTrans, m, n, k, 1.0, auxPtrA, k_A,
               auxPtrB, n, 0.0, auxPtrC, n);
   C.ArrayToMatrix(auxPtrC, m, n, layout);
+
+  delete auxPtrA;
+  delete auxPtrB;
+  delete auxPtrC;
 }
 
-void Matrix_demo::print() const{
+void Matrix_demo::LAPACK_Dsyev(Matrix_demo &eigenValue,
+                               Matrix_demo &eigenVector, int layout) {
+  if (this->nrow_ != this->ncol_) {
+    cerr << "nrow != ncol when using func <dsyev>!" << endl;
+    exit(EXIT_FAILURE);
+  }
+  int n = this->nrow_;
+  double *auxPtr = nullptr;
+  auxPtr = this->matrixToArray(CblasRowMajor, auxPtr);
+
+  int info = 0;
+  double *eigenPtr;
+  eigenPtr = new double[n];
+  info = LAPACKE_dsyevd(layout, 'V', 'U', n, auxPtr, n, eigenPtr);
+
+  if (info != 0) {
+    cerr << "Failed to calculate! --<LAPACKE_dsyevd_2stage>" << endl;
+    exit(EXIT_FAILURE);
+  }
+  eigenValue.EigenToMatrix(eigenPtr, n);
+  eigenVector.ArrayToMatrix(auxPtr, n, n);
+
+  delete auxPtr;
+  delete eigenPtr;
+}
+
+void Matrix_demo::print() const {
   for (int i = 0; i < nrow_; ++i) {
     for (int j = 0; j < ncol_; ++j) {
       cout.clear();

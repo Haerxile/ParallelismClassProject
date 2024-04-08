@@ -1,27 +1,22 @@
 # makefile
-
-ROOT := $(shell pwd)
-
+ROOT := /home/haerxile/ColdField/ParallelismClassProject
 # ownset path
-SUBDIR := $(ROOT)
+SUBDIR := $(ROOT)/MeVsBLAS
 SUBDIR += $(ROOT)/InputH
 SUBDIR += $(ROOT)/MatrixH
 SUBDIR += $(ROOT)/TimerH
 SUBDIR += $(ROOT)/TabulateH
-SUBDIR += $(ROOT)/DiagonizeTestLACPAC
 SUBDIR += /opt/OpenBLAS/lib
-SUBDIR += /usr/local/lib
 
 # target
 TARGET := main
 CXX := g++
-OUTPUT := $(ROOT)/output
+OUTPUT := $(ROOT)/MeVsBLAS/output
 
 # file paths and depends
 
 INCS := $(foreach DIR,$(SUBDIR),-I$(DIR))
 SICS := $(foreach DIR,$(SUBDIR),$(wildcard $(DIR)/libopenblas.a))
-SICS += $(foreach DIR,$(SUBDIR),$(wildcard $(DIR)/liblapacke.a))
 SRCS := $(foreach DIR,$(SUBDIR),$(wildcard $(DIR)/*.cpp))
 OBJS := $(patsubst $(ROOT)/%.cpp,$(OUTPUT)/%.o,$(SRCS))
 DEPS := $(patsubst %.o,%.d,$(OBJS))
@@ -35,7 +30,7 @@ $(TARGET) : $(OBJS)
 
 # compiling
 
-$(OUTPUT)/%.o : %.cpp
+$(OUTPUT)/%.o : $(ROOT)/%.cpp
 	@echo Compiling $<...
 	@mkdir -p $(dir $@)
 	$(CXX) -MMD -MP -c $(INCS) $< -o $@

@@ -4,6 +4,7 @@
 #include <cblas-openblas.h>
 #include <fstream>
 #include <iostream>
+#include <lapacke.h>
 #include <vector>
 
 class Matrix_demo {
@@ -23,8 +24,10 @@ public:
   bool writeToFile(const std::string &filename);
   double maxElem() const;
   double minElem() const;
-  double* matrixToArray(CBLAS_LAYOUT layout, double* arrayPtr) const;
-  void ArrayToMatrix(double *ptr, int m, int n, CBLAS_LAYOUT layout);
+  double *matrixToArray(CBLAS_LAYOUT layout, double *arrayPtr) const;
+  void ArrayToMatrix(double *ptr, int m, int n,
+                     CBLAS_LAYOUT layout = CblasRowMajor);
+  void EigenToMatrix(double *ptr, int n);
 
   Matrix_demo &operator=(const Matrix_demo &matrix);
   Matrix_demo operator*(const Matrix_demo &matrix) const;
@@ -34,6 +37,8 @@ public:
 
   static void CBLAS_Mult(const Matrix_demo &A, const Matrix_demo &B,
                          Matrix_demo &C, CBLAS_LAYOUT layout = CblasRowMajor);
+  void LAPACK_Dsyev(Matrix_demo &eigenValue, Matrix_demo &eigenVector,
+                    int layout = LAPACK_ROW_MAJOR);
   void print() const;
 
 private:
