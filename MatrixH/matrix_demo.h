@@ -37,8 +37,20 @@ public:
 
   static void CBLAS_Mult(const Matrix_demo &A, const Matrix_demo &B,
                          Matrix_demo &C, CBLAS_LAYOUT layout = CblasRowMajor);
+  // A * B = C they are all Matrix_demo type
+  // layout equals that in CBLAS as CBLAS_LAYOUT
+  // typedef enum CBLAS_ORDER     {CblasRowMajor=101, CblasColMajor=102}
+  // CBLAS_ORDER; typedef CBLAS_ORDER CBLAS_LAYOUT;
+
   void LAPACK_Dsyev(Matrix_demo &eigenValue, Matrix_demo &eigenVector,
                     int layout = LAPACK_ROW_MAJOR);
+  // origin matrix is the function caller
+  // eigenValue is a Matrix_demo type, receive output of eigenValue as a n*n
+  // matrix eigenVector is a Matrix_demo type, receive output of eigenVector the
+  // function caller can be the output receiver at the same time layout is a int
+  // type implying the order #define LAPACK_ROW_MAJOR               101 #define
+  // LAPACK_COL_MAJOR               102
+
   void print() const;
 
 private:
