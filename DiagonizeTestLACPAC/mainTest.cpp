@@ -23,8 +23,6 @@ int main(int argc, char *argv[]) {
   matrix.readFromFile(inputFilename, ios::beg);
   Timer_demo::tick("Matrix_demo", "readFromFile");
 
-  matrix.print();
-
   Timer_demo::tick("Matrix_demo", "LAPACK_Dsyev");
   matrix.LAPACK_Dsyev(matrix, eigenVector, LAPACK_ROW_MAJOR);
   Timer_demo::tick("Matrix_demo", "LAPACK_Dsyev");

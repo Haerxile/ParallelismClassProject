@@ -18,7 +18,7 @@ public:
   void init(const int &nrow, const int &ncol, const double &initNum = 0);
   void init(const int &n);
   void genRandomMatrix(const int &m, const int &n, const double &downLim,
-                       const double &upLim);
+                       const double &upLim, const std::string &matrixType);
   std::ios::pos_type readFromFile(const std::string &filename,
                                   const std::ios::pos_type &targetPos);
   bool writeToFile(const std::string &filename);
