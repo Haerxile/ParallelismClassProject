@@ -1,6 +1,8 @@
 #ifndef MATRIX_DEMO_H
 #define MATRIX_DEMO_H
 
+#include "../InputH/input.h"
+
 #include <cblas-openblas.h>
 #include <fstream>
 #include <iostream>
@@ -17,6 +19,7 @@ public:
   int colNum() const;
   void init(const int &nrow, const int &ncol, const double &initNum = 0);
   void init(const int &n);
+  void init(Input& inputConfig);
   void genRandomMatrix(const int &m, const int &n, const double &downLim,
                        const double &upLim, const std::string &matrixType);
   std::ios::pos_type readFromFile(const std::string &filename,

@@ -62,6 +62,20 @@ void Matrix_demo::init(const int &n) {
   }
 }
 
+void Matrix_demo::init(Input &inputConfig) {
+  nrow_ = stoi(inputConfig.targetConfigs_.at("nrows"));
+  ncol_ = stoi(inputConfig.targetConfigs_.at("ncols"));
+  data_.clear();
+  data_.resize(nrow_, std::vector<double>(ncol_));
+  fstream fileIn;
+  inputConfig.readData(fileIn);
+  for (int i = 0; i < nrow_; ++i) {
+    for (int j = 0; j < ncol_; ++j) {
+      fileIn >> data_[i][j];
+    }
+  }
+}
+
 void Matrix_demo::genRandomMatrix(const int &m, const int &n,
                                   const double &downLim, const double &upLim,
                                   const string &matrixType) {

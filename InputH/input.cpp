@@ -1,25 +1,25 @@
 #include "input.h"
 #include <algorithm>
+#include <iostream>
+
+#define defaultTarget {{"calculation", "Default"}, \
+                    {"matrix_type", "Default"}, \
+                    {"matrix_print", "Default"}, \
+                    {"nrows", "Default"}, \
+                    {"ncols", "Default"}, \
+                    {"print_mpi_log", "Default"}}
 
 using namespace std;
 
 Input::Input() {
-  targetConfigs_ = {{"calculation", "Default"},
-                    {"matrix_type", "Default"},
-                    {"matrix_print", "Default"},
-                    {"nrows", "Default"},
-                    {"ncols", "Default"}};
+  targetConfigs_ = defaultTarget;
   filename_ = "emptyInput";
   readInConfigs_ = {};
   MAXLEN_ = 256;
 }
 
 Input::Input(const string &filename) {
-  targetConfigs_ = {{"calculation", "Default"},
-                    {"matrix_type", "Default"},
-                    {"matrix_print", "Default"},
-                    {"nrows", "Default"},
-                    {"ncols", "Default"}};
+  targetConfigs_ = defaultTarget;
   filename_ = "emptyInput";
   readInConfigs_ = {};
   MAXLEN_ = 256;
@@ -70,12 +70,22 @@ bool Input::readConfigsFromFile() {
     char tempChar;
     int flag = 0;
 
+    char auxIfNum;
+    fin >> auxIfNum;
+    fin.putback(auxIfNum);
+    if(auxIfNum > '0' && auxIfNum < '9') {
+      dataPos_ = fin.tellg();
+      std::cout << "Data found at line <" << cntLine << ">\n";
+      break;
+    }
     // 逐字读取
     do {
       fin >> tempChar;
       // fin.get(&tempChar, MAXLEN, '\n');
-      if (tempChar == ' ' || tempChar == '\t' || tempChar == EOF) {
+      if (tempChar == ' ' || tempChar == '\t' ) {
         // do nothing
+      } else if (tempChar == '\n' || tempChar == EOF) {
+        break;
       } else if (tempChar == '#') {
         fin.ignore(MAXLEN_, '\n');
         tempChar = EOF;
@@ -88,11 +98,16 @@ bool Input::readConfigsFromFile() {
       } else if (flag == 1) {
         fin.unget();
         fin >> tempSI.second;
+        // fin.unget();
         // fin.getline(&tempSI.second[0], MAXLEN, ' ');
         flag++;
+        if(fin.peek() == '\n') {
+          break;
+        }
       } else if (flag > 1) {
         cerr << "More than 2 arguments at line <" << cntLine << ">!" << endl;
-        return false;
+        fin.ignore(MAXLEN_, '\n');
+        tempChar = EOF;
       } else {
         cerr << "Unkown error #0001 at line <" << cntLine << ">!" << endl;
         return false;
@@ -130,4 +145,12 @@ bool Input::putReadToConfigs() {
     }
   }
   return state;
+}
+
+void Input::readData(std::fstream &fin) {
+  fin.open(filename_, ios::in);
+  if (!fin.is_open()) {
+    cerr << "Cannot open file <" << filename_ << ">!" << endl;
+  } // 文件是否正常打开
+  fin.seekg(dataPos_, ios::beg);
 }

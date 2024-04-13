@@ -7,9 +7,6 @@ USE_MPI := yes
 # ownset path
 SUBDIR := $(ROOT)
 SUBDIR += $(ROOT)/InputH
-SUBDIR += $(ROOT)/MatrixH
-SUBDIR += $(ROOT)/TimerH
-SUBDIR += $(ROOT)/TabulateH
 SUBDIR += $(ROOT)/DiagonizeTestLACPAC
 SUBDIR += /opt/OpenBLAS/lib
 SUBDIR += /usr/local/lib

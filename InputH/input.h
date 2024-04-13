@@ -18,6 +18,8 @@ public:
   void init(const std::string &filename);
   void set_maxlen(int target_len);
 
+  void readData(std::fstream& fin);
+
   Configs targetConfigs_;
 
   void printConfigs();
@@ -25,6 +27,7 @@ public:
 private:
   std::string filename_;
   Configs readInConfigs_;
+  std::ios::pos_type dataPos_;
   int MAXLEN_;
 
   bool readConfigsFromFile();

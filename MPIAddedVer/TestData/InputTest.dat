@@ -1,0 +1,17 @@
+# this is a notation
+Calculation diago # diagonalization of a matrix
+matrix_type random # initialization of a matrix
+matrix_print 1 # print the matrix
+nrows 3 # number of rows
+unmatched item # unmatched argument
+ncols 3 # number of cols
+
+# blank line
+calculation diago diagoo # too many argument in a line
+
+djashdcbakjc xznlsic
+
+print_mpi_log 1
+1 2 3
+2 3 4
+4 5 6
