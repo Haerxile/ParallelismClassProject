@@ -63,4 +63,10 @@ private:
   std::vector<std::vector<double>> data_;
 };
 
+class Mareix_cmplx : public Matrix_demo {
+  private:
+    Matrix_demo Re;
+    Matrix_demo Im;
+};
+
 #endif
