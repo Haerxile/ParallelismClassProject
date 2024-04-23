@@ -1,0 +1,6 @@
+Calculation diago # diagonalization of a matrix
+matrix_type random # initialization of a matrix
+matrix_print 1 # print the matrix
+nrows 4 # number of rows
+ncols 5 # number of cols
+

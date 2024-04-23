@@ -165,7 +165,7 @@ bool Matrix_demo::writeToFile(const string &filename) {
     cerr << "Failed to open <" << filename << ">!" << endl;
     return false;
   }
-  fileOut << endl << nrow_ << " " << ncol_ << endl;
+  // fileOut << endl << nrow_ << " " << ncol_ << endl;
   for (int i = 0; i < nrow_; ++i) {
     for (int j = 0; j < ncol_; ++j) {
       fileOut << data_[i][j] << " ";
@@ -220,6 +220,33 @@ double *Matrix_demo::matrixToArray(CBLAS_LAYOUT layout,
   } else if (layout == CblasColMajor) {
     for (int i = 0; i < ncol_; ++i) {
       for (int j = 0; j < nrow_; ++j) {
+        *tempPtr = data_[j][i];
+        tempPtr++;
+      }
+    }
+  }
+  return arrayPtr;
+}
+
+double *Matrix_demo::matrixToArray(CBLAS_LAYOUT layout,
+                                   double *arrayPtr, const int& startRow, const int& endRow) const {
+  if(startRow < 0 || endRow > nrow_ || startRow >= endRow) {
+    cerr << "Invalid startRow or endRow given!" << endl;
+    exit(EXIT_FAILURE);
+  }
+  int tempIndex = (endRow - startRow) * ncol_;
+  arrayPtr = new double[tempIndex];
+  double *tempPtr = arrayPtr;
+  if (layout == CblasRowMajor) {
+    for (int i = startRow; i < endRow; ++i) {
+      for (int j = 0; j < ncol_; ++j) {
+        (*tempPtr) = this->data_[i][j];
+        tempPtr++;
+      }
+    }
+  } else if (layout == CblasColMajor) {
+    for (int i = 0; i < ncol_; ++i) {
+      for (int j = startRow; j < endRow; ++j) {
         *tempPtr = data_[j][i];
         tempPtr++;
       }

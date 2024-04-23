@@ -28,6 +28,7 @@ public:
   double maxElem() const;
   double minElem() const;
   double *matrixToArray(CBLAS_LAYOUT layout, double *arrayPtr) const;
+  double *matrixToArray(CBLAS_LAYOUT layout, double *arrayPtr, const int& startRow, const int& endRow) const;
   void ArrayToMatrix(double *ptr, int m, int n,
                      CBLAS_LAYOUT layout = CblasRowMajor);
   void EigenToMatrix(double *ptr, int n);

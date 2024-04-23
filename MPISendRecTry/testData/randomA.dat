@@ -1,0 +1,10 @@
+Calculation diago # diagonalization of a matrix
+matrix_type random # initialization of a matrix
+matrix_print 1 # print the matrix
+nrows 4 # number of rows
+ncols 5 # number of cols
+
+79.8675 28.2922 34.773 -13.3964 22.1937 
+-75.1051 -91.1501 -96.0189 18.2406 46.8422 
+-67.2203 57.8123 -4.85569 -35.9128 -3.38216 
+-92.7587 70.7745 18.5048 -87.2677 38.1024 
